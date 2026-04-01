@@ -1,0 +1,24 @@
+{
+  "name": "LearnJap - Apprendre le japonais",
+  "short_name": "LearnJap",
+  "description": "Application pour apprendre le japonais : alphabets, kanji, vocabulaire et jeux",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#dc2626",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
