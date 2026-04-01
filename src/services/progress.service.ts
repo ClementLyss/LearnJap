@@ -1,9 +1,32 @@
 import { prisma } from "@/lib/db";
 import { sm2 } from "@/lib/sm2";
 
+export type KanjiStatus = "unseen" | "want_to_learn" | "learning" | "known";
+
 export async function getKanjiProgress(userId: string, kanjiId: number) {
   return prisma.userProgress.findUnique({
     where: { userId_kanjiId: { userId, kanjiId } },
+  });
+}
+
+export async function getKanjiProgressByLevel(userId: string, jlptLevel: number) {
+  return prisma.userProgress.findMany({
+    where: {
+      userId,
+      kanji: { jlptLevel },
+    },
+    select: {
+      kanjiId: true,
+      status: true,
+    },
+  });
+}
+
+export async function setKanjiStatus(userId: string, kanjiId: number, status: KanjiStatus) {
+  return prisma.userProgress.upsert({
+    where: { userId_kanjiId: { userId, kanjiId } },
+    update: { status },
+    create: { userId, kanjiId, status },
   });
 }
 
@@ -22,9 +45,14 @@ export async function updateKanjiProgress(
 
   const result = sm2(current, quality);
 
+  // Determine status from SM-2 result
+  let status: KanjiStatus = "learning";
+  if (result.interval >= 21) status = "known";
+
   return prisma.userProgress.upsert({
     where: { userId_kanjiId: { userId, kanjiId } },
     update: {
+      status,
       repetitions: result.repetitions,
       easeFactor: result.easeFactor,
       interval: result.interval,
@@ -36,6 +64,7 @@ export async function updateKanjiProgress(
     create: {
       userId,
       kanjiId,
+      status,
       repetitions: result.repetitions,
       easeFactor: result.easeFactor,
       interval: result.interval,
@@ -52,6 +81,7 @@ export async function getDueKanji(userId: string, limit: number = 20) {
     where: {
       userId,
       kanjiId: { not: null },
+      status: { in: ["learning", "want_to_learn"] },
       nextReview: { lte: new Date() },
     },
     include: {

@@ -140,6 +140,9 @@ model UserProgress {
   vocabId     Int?
   vocab       VocabularyItem? @relation(fields: [vocabId], references: [id], onDelete: Cascade)
 
+  // Learning status: unseen → want_to_learn → learning → known
+  status       String   @default("unseen") // "unseen" | "want_to_learn" | "learning" | "known"
+
   // SM-2 algorithm fields
   repetitions  Int      @default(0)
   easeFactor   Float    @default(2.5)

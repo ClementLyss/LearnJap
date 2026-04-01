@@ -1,5 +1,9 @@
 import Link from "next/link";
 import { getKanjiByJlptLevel } from "@/services/kanji.service";
+import { getKanjiProgressByLevel } from "@/services/progress.service";
+import { auth } from "@/lib/auth";
+import KanjiGrid from "@/components/kanji/KanjiGrid";
+import type { KanjiStatus } from "@/services/progress.service";
 
 const jlptLevels = [5, 4, 3, 2, 1];
 
@@ -10,7 +14,20 @@ export default async function KanjiPage({
 }) {
   const params = await searchParams;
   const selectedLevel = params.level ? parseInt(params.level) : 5;
+
+  const session = await auth();
   const kanjiList = await getKanjiByJlptLevel(selectedLevel);
+
+  // Fetch user progress if logged in
+  let statusMap: Record<number, KanjiStatus> = {};
+  if (session?.user?.id) {
+    const progress = await getKanjiProgressByLevel(session.user.id, selectedLevel);
+    statusMap = Object.fromEntries(
+      progress
+        .filter((p) => p.kanjiId !== null)
+        .map((p) => [p.kanjiId!, p.status as KanjiStatus])
+    );
+  }
 
   return (
     <div>
@@ -47,22 +64,15 @@ export default async function KanjiPage({
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
-          {kanjiList.map((kanji) => (
-            <Link
-              key={kanji.id}
-              href={`/kanji/${kanji.id}`}
-              className="group flex flex-col items-center rounded-xl border border-zinc-200 bg-white p-4 transition-all hover:border-red-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-red-700"
-            >
-              <span className="text-3xl font-medium text-zinc-900 dark:text-white">
-                {kanji.character}
-              </span>
-              <span className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-                {kanji.meaningFr}
-              </span>
-            </Link>
-          ))}
-        </div>
+        <KanjiGrid
+          kanjiList={kanjiList.map((k) => ({
+            id: k.id,
+            character: k.character,
+            meaningFr: k.meaningFr,
+          }))}
+          initialStatuses={statusMap}
+          isLoggedIn={!!session?.user}
+        />
       )}
     </div>
   );

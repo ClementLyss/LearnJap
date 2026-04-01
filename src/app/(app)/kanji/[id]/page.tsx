@@ -1,6 +1,10 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getKanjiById } from "@/services/kanji.service";
+import { getKanjiProgress } from "@/services/progress.service";
+import { auth } from "@/lib/auth";
+import KanjiStatusButton from "@/components/kanji/KanjiStatusButton";
+import type { KanjiStatus } from "@/services/progress.service";
 
 export default async function KanjiDetailPage({
   params,
@@ -8,9 +12,17 @@ export default async function KanjiDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const kanji = await getKanjiById(parseInt(id));
+  const kanjiId = parseInt(id);
+  const kanji = await getKanjiById(kanjiId);
 
   if (!kanji) notFound();
+
+  const session = await auth();
+  let currentStatus: KanjiStatus = "unseen";
+  if (session?.user?.id) {
+    const progress = await getKanjiProgress(session.user.id, kanjiId);
+    currentStatus = (progress?.status as KanjiStatus) ?? "unseen";
+  }
 
   const onReadings = kanji.readings.filter((r) => r.type === "on");
   const kunReadings = kanji.readings.filter((r) => r.type === "kun");
@@ -66,6 +78,11 @@ export default async function KanjiDetailPage({
                 ))}
               </div>
             </div>
+          )}
+
+          {/* Status Button */}
+          {session?.user && (
+            <KanjiStatusButton kanjiId={kanji.id} initialStatus={currentStatus} />
           )}
         </div>
 
