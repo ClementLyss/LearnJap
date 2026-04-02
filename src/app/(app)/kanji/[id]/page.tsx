@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getKanjiById } from "@/services/kanji.service";
+import { getKanjiById, getRelatedKanji } from "@/services/kanji.service";
 import { getKanjiProgress } from "@/services/progress.service";
 import { auth } from "@/lib/auth";
 import KanjiStatusButton from "@/components/kanji/KanjiStatusButton";
@@ -17,6 +17,7 @@ export default async function KanjiDetailPage({
 
   if (!kanji) notFound();
 
+  const relatedKanji = await getRelatedKanji(kanjiId);
   const session = await auth();
   let currentStatus: KanjiStatus = "unseen";
   if (session?.user?.id) {
@@ -179,6 +180,39 @@ export default async function KanjiDetailPage({
               <p className="text-sm text-zinc-400">Aucun exemple pour le moment.</p>
             )}
           </div>
+
+          {/* Related Kanji */}
+          {relatedKanji.length > 0 && (
+            <div className="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
+              <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">
+                Kanji liés (radicaux communs)
+              </h2>
+              <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
+                {relatedKanji.map((related) => {
+                  const sharedRadicals = related.radicals
+                    .filter((r) =>
+                      kanji.radicals.some((kr) => kr.radicalId === r.radicalId)
+                    )
+                    .map((r) => r.radical.character);
+
+                  return (
+                    <Link
+                      key={related.id}
+                      href={`/kanji/${related.id}`}
+                      className="flex flex-col items-center rounded-lg border border-zinc-100 bg-zinc-50 p-3 transition-colors hover:border-red-300 hover:bg-red-50 dark:border-zinc-800 dark:bg-zinc-800/50 dark:hover:border-red-700 dark:hover:bg-red-950"
+                    >
+                      <span className="text-2xl text-zinc-900 dark:text-white">
+                        {related.character}
+                      </span>
+                      <span className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+                        {sharedRadicals.join(" ")}
+                      </span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
