@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import KanjiCard from "./KanjiCard";
 import type { KanjiStatus } from "@/services/progress.service";
 
@@ -25,8 +26,16 @@ const statusFilters: { value: "all" | KanjiStatus; label: string; color: string 
 ];
 
 export default function KanjiGrid({ kanjiList, initialStatuses, isLoggedIn }: KanjiGridProps) {
+  const router = useRouter();
   const [statuses, setStatuses] = useState<Record<number, KanjiStatus>>(initialStatuses);
   const [filter, setFilter] = useState<"all" | KanjiStatus>("all");
+
+  // Prefetch all kanji detail pages on mount for instant navigation
+  useEffect(() => {
+    kanjiList.forEach((k) => {
+      router.prefetch(`/kanji/${k.id}`);
+    });
+  }, [kanjiList, router]);
 
   const handleStatusChange = useCallback(async (kanjiId: number, newStatus: KanjiStatus) => {
     // Optimistic update
