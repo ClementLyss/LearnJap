@@ -13,12 +13,17 @@ export default async function KanjiDetailPage({
 }) {
   const { id } = await params;
   const kanjiId = parseInt(id);
-  const kanji = await getKanjiById(kanjiId);
+
+  // Parallelize all independent queries
+  const [kanji, relatedKanji, session] = await Promise.all([
+    getKanjiById(kanjiId),
+    getRelatedKanji(kanjiId),
+    auth(),
+  ]);
 
   if (!kanji) notFound();
 
-  const relatedKanji = await getRelatedKanji(kanjiId);
-  const session = await auth();
+  // User progress needs session, so it runs after
   let currentStatus: KanjiStatus = "unseen";
   if (session?.user?.id) {
     const progress = await getKanjiProgress(session.user.id, kanjiId);

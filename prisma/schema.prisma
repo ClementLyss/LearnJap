@@ -92,6 +92,7 @@ model KanjiRadical {
   radical   Radical @relation(fields: [radicalId], references: [id], onDelete: Cascade)
 
   @@unique([kanjiId, radicalId])
+  @@index([radicalId])
 }
 
 model KanjiReading {
@@ -101,6 +102,8 @@ model KanjiReading {
   type    String // "on" | "kun"
   reading String // しょく / た.べる
   romaji  String // shoku / taberu
+
+  @@index([kanjiId])
 }
 
 model KanjiExample {
@@ -112,6 +115,8 @@ model KanjiExample {
   meaningFr  String  // "manger"
   sentence   String? // 毎日ご飯を食べる
   sentenceFr String? // "Je mange du riz tous les jours"
+
+  @@index([kanjiId])
 }
 
 // ─── Vocabulary ──────────────────────────────────────────────────
@@ -156,4 +161,6 @@ model UserProgress {
 
   @@unique([userId, kanjiId])
   @@unique([userId, vocabId])
+  @@index([userId])
+  @@index([kanjiId])
 }

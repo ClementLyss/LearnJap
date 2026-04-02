@@ -15,8 +15,11 @@ export default async function KanjiPage({
   const params = await searchParams;
   const selectedLevel = params.level ? parseInt(params.level) : 5;
 
-  const session = await auth();
-  const kanjiList = await getKanjiByJlptLevel(selectedLevel);
+  // Parallelize auth + kanji data fetch
+  const [session, kanjiList] = await Promise.all([
+    auth(),
+    getKanjiByJlptLevel(selectedLevel),
+  ]);
 
   // Fetch user progress if logged in
   let statusMap: Record<number, KanjiStatus> = {};
