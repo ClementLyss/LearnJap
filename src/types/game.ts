@@ -21,3 +21,11 @@ export interface GameSession {
   results: QuizResult[];
   currentIndex: number;
 }
+
+export interface QuizQuestionWithOptions {
+  kanjiId: number;
+  prompt: string;
+  correctAnswer: string;
+  options: string[];
+  mode: GameMode;
+}

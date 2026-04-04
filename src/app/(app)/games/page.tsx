@@ -10,25 +10,25 @@ const games = [
     badge: "Quotidien",
   },
   {
-    id: "kanji-to-french",
-    title: "Kanji → Français",
-    description: "On vous montre un kanji, écrivez sa signification en français",
-    href: "/games/kanji-quiz?mode=kanji-to-french",
-    color: "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300",
-  },
-  {
     id: "kanji-to-japanese",
-    title: "Kanji → Japonais",
-    description: "On vous montre un kanji, écrivez sa lecture en hiragana",
+    title: "Deviner la lecture",
+    description: "Un kanji s'affiche, trouvez la bonne lecture en hiragana parmi 6 propositions",
     href: "/games/kanji-quiz?mode=kanji-to-japanese",
     color: "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300",
   },
   {
     id: "french-to-kanji",
-    title: "Français → Kanji",
-    description: "On vous donne la signification, trouvez le bon kanji",
+    title: "Deviner le kanji",
+    description: "Un mot en français s'affiche, trouvez le bon kanji parmi 6 propositions",
     href: "/games/kanji-quiz?mode=french-to-kanji",
     color: "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300",
+  },
+  {
+    id: "kanji-to-french",
+    title: "Kanji → Français",
+    description: "Un kanji s'affiche, trouvez sa signification en français parmi 6 propositions",
+    href: "/games/kanji-quiz?mode=kanji-to-french",
+    color: "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300",
   },
 ];
 
