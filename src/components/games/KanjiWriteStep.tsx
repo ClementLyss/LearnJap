@@ -58,13 +58,17 @@ export default function KanjiWriteStep({ kanji, onNext }: KanjiWriteStepProps) {
 
   const handleCheck = (index: number) => {
     const exercise = exercises[index];
-    const userNormalized = normalizeReading(states[index].userInput);
+    // Read directly from DOM to get wanakana's latest value,
+    // then convert any trailing romaji (e.g. pending "n" → "ん")
+    const rawValue = inputRefs.current[index]?.value ?? states[index].userInput;
+    const finalValue = toHiragana(rawValue, { IMEMode: false });
+    const userNormalized = normalizeReading(finalValue);
     const answerNormalized = normalizeReading(exercise.answer);
     const isCorrect = userNormalized === answerNormalized;
 
     setStates((prev) => {
       const next = [...prev];
-      next[index] = { ...next[index], isCorrect };
+      next[index] = { ...next[index], userInput: finalValue, isCorrect };
       return next;
     });
   };
