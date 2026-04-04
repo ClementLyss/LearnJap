@@ -11,7 +11,7 @@ export default function HomePage() {
           Apprenez le japonais à votre rythme : alphabets, kanji, vocabulaire et jeux interactifs
           avec répétition espacée.
         </p>
-        <div className="mt-8 flex justify-center gap-4">
+        <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
           <Link
             href="/login"
             className="rounded-lg bg-red-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-red-700"
@@ -23,6 +23,14 @@ export default function HomePage() {
             className="rounded-lg border border-zinc-300 px-6 py-3 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-900"
           >
             Explorer
+          </Link>
+        </div>
+        <div className="mt-4">
+          <Link
+            href="/installer"
+            className="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-red-600 transition-colors dark:text-zinc-400 dark:hover:text-red-400"
+          >
+            📲 Installer l&apos;application mobile
           </Link>
         </div>
       </div>

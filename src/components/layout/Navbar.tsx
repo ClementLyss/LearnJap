@@ -10,6 +10,7 @@ const navLinks = [
   { href: "/kanji", label: "Kanji" },
   { href: "/vocabulary", label: "Vocabulaire" },
   { href: "/games", label: "Jeux" },
+  { href: "/installer", label: "📲 Installer" },
 ];
 
 export default function Navbar() {

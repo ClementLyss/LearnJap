@@ -1,0 +1,39 @@
+{
+  "packageId": "com.learnjap.app",
+  "host": "learn-jap-lyart.vercel.app",
+  "name": "LearnJap",
+  "launcherName": "LearnJap",
+  "display": "standalone",
+  "themeColor": "#dc2626",
+  "themeColorDark": "#18181b",
+  "navigationColor": "#ffffff",
+  "navigationColorDark": "#18181b",
+  "navigationDividerColor": "#e4e4e7",
+  "navigationDividerColorDark": "#27272a",
+  "backgroundColor": "#ffffff",
+  "enableNotifications": false,
+  "startUrl": "/dashboard",
+  "iconUrl": "https://learn-jap-lyart.vercel.app/icons/icon-512x512.png",
+  "maskableIconUrl": "https://learn-jap-lyart.vercel.app/icons/icon-512x512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "learnjap.keystore",
+    "alias": "learnjap"
+  },
+  "appVersionCode": 1,
+  "appVersionName": "1.0.0",
+  "shortcuts": [],
+  "generatorApp": "nicepkg/nicepwa",
+  "webManifestUrl": "https://learn-jap-lyart.vercel.app/manifest.json",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://learn-jap-lyart.vercel.app/",
+  "minSdkVersion": 19,
+  "orientation": "portrait"
+}
